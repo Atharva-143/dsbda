@@ -1,0 +1,63 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+df = pd.read_csv("Iris.csv")
+
+
+
+print("First 5 Rows of Iris Dataset:")
+print(df.head())
+
+
+print("\nFeatures and their Data Types:")
+print(df.dtypes)
+
+
+plt.figure(figsize=(12, 8))
+for i, column in enumerate(df.columns[:-1]):   # Exclude target column 'variety'
+    plt.subplot(2, 2, i + 1)
+    plt.hist(df[column], bins=10, edgecolor='black')
+    plt.title(f"Histogram of {column}")
+    plt.xlabel(column)
+    plt.ylabel("Frequency")
+plt.tight_layout()
+plt.show()
+
+
+
+plt.figure(figsize=(12, 8))
+for i, column in enumerate(df.columns[:-1]):   # Exclude target column 'variety'
+    plt.subplot(2, 2, i + 1)
+    sns.boxplot(x=df[column], color='salmon')
+    plt.title(f"Boxplot of {column}")
+plt.tight_layout()
+plt.show()
+
+
+
+print("\nOutlier Detection and Distribution Comparison:")
+for column in df.columns[:-1]:
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)][column]
+    print(f"\nFeature: {column}")
+    print(f"Mean: {df[column].mean():.2f}")
+    print(f"Median: {df[column].median():.2f}")
+    print(f"Standard Deviation: {df[column].std():.2f}")
+    print(f"Outliers Detected: {'Yes' if not outliers.empty else 'No'}")
+    if not outliers.empty:
+        print(f"Outlier Values: {outliers.tolist()}")
+
+
+plt.figure(figsize=(12, 8))
+for i, column in enumerate(df.columns[:-1]):
+    plt.subplot(2, 2, i + 1)
+    sns.violinplot(x='variety', y=column, hue='variety', data=df, palette='Set2', legend=False)
+    plt.title(f"Violin Plot of {column} by Variety")
+plt.tight_layout()
+plt.show()
