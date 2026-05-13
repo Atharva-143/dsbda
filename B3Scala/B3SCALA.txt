@@ -1,0 +1,136 @@
+STEP 1 — Open Ubuntu Terminal
+
+Press:
+
+Ctrl + Alt + T
+
+Terminal opens.
+
+
+STEP 2 — Start Spark Shell
+
+Type:
+
+spark-shell
+
+Press Enter.
+
+Wait few seconds.
+
+
+You will see:
+
+scala>
+
+This means Spark + Scala is ready.
+
+
+STEP 3 — Create Numbers
+
+Type:
+
+val numbers = sc.parallelize(Array(10, 20, 30, 40))
+
+Press Enter.
+
+
+WHAT THIS DOES
+
+parallelize()
+creates Spark distributed dataset.
+Array contains:
+10, 20, 30, 40
+STEP 4 — Add Numbers
+
+Type:
+
+val sum = numbers.reduce(_ + _)
+
+Press Enter.
+
+WHAT THIS DOES
+
+reduce(_ + _)
+
+adds all numbers together.
+
+Meaning:
+
+10 + 20 + 30 + 40
+STEP 5 — Print Output
+
+Type:
+
+println("Sum = " + sum)
+
+Press Enter.
+
+FINAL OUTPUT
+Sum = 100
+
+DONE.
+
+COMPLETE FLOW
+
+Remember ONLY this:
+
+open terminal
+→ spark-shell
+→ create numbers
+→ reduce addition
+→ print output
+
+
+FULL PRACTICAL CODE TO REMEMBER
+val numbers = sc.parallelize(Array(10, 20, 30, 40))
+
+val sum = numbers.reduce(_ + _)
+
+println("Sum = " + sum)
+
+
+VERY IMPORTANT VIVA
+What is Apache Spark?
+
+Apache Spark is a fast distributed big-data processing framework.
+
+What is Scala?
+
+Scala is a programming language used with Spark.
+
+What is RDD?
+
+RDD means Resilient Distributed Dataset.
+
+Basic data structure in Spark.
+
+What does parallelize() do?
+
+Creates distributed dataset.
+
+What does reduce() do?
+
+Combines all values into one result.
+
+Why Spark is faster than Hadoop?
+
+Spark performs in-memory processing.
+
+IF spark-shell DOESN’T OPEN
+
+Faculty setup issue.
+Not your mistake.
+
+Usually Spark already installed in lab.
+
+You only need:
+
+spark-shell
+
+and then write Scala lines.
+
+
+
+
+
+source ~/.bashrc
