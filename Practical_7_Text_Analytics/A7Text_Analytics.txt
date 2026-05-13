@@ -1,0 +1,77 @@
+import nltk
+import re
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger_eng')
+
+
+text = """Artificial Intelligence is transforming the modern world rapidly.
+Many industries use AI technologies such as Machine Learning, Deep Learning, and Natural Language Processing.
+Students and researchers are learning Python, Data Science, and Cloud Computing to build innovative applications.
+In free time, people enjoy reading books, listening to music, playing games, and travelling to new places."""
+
+
+print("Original Text:\n", text)
+
+
+sent_tokens = sent_tokenize(text)
+print("\nSentence Tokenization:")
+print(sent_tokens)
+
+
+word_tokens = word_tokenize(text)
+print("\nWord Tokenization:")
+print(word_tokens)
+
+
+clean_text = re.sub('[^a-zA-Z]', ' ', text)
+print("\nText after removing punctuation:")
+print(clean_text)
+
+
+stop_words = set(stopwords.words('english'))
+tokens = word_tokenize(clean_text.lower())
+filtered_words = [word for word in tokens if word not in stop_words]
+
+
+print("\nTokens after Stop Words Removal:")
+print(filtered_words)
+
+
+pos_tags = nltk.pos_tag(filtered_words)
+print("\nPOS Tagging:")
+print(pos_tags)
+
+
+ps = PorterStemmer()
+stemmed_words = [ps.stem(word) for word in filtered_words]
+print("\nStemmed Words:")
+print(stemmed_words)
+
+
+lemmatizer = WordNetLemmatizer()
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_words]
+print("\nLemmatized Words:")
+print(lemmatized_words)
+
+
+documents = [text]
+
+
+
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(documents)
+feature_names = vectorizer.get_feature_names_out()
+
+print("\nTF-IDF Representation:")
+print("Feature Names:", feature_names)
+print("TF-IDF Matrix:\n", tfidf_matrix.toarray())
+
+
