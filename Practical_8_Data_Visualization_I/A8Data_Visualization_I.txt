@@ -1,0 +1,58 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+df = sns.load_dataset('titanic')
+
+
+print("First 5 Rows of Titanic Dataset:")
+print(df.head())
+
+
+
+print("\nStatistical Summary:")
+print(df.describe().transpose())
+
+
+
+plt.figure(figsize=(6, 4))
+sns.histplot(df['age'], kde=True, bins=20)
+plt.title("Distribution of Age")
+plt.xlabel("Age")
+plt.ylabel("Count")
+plt.show()
+
+
+plt.figure(figsize=(6, 4))
+sns.boxplot(x='class', y='age', data=df)
+plt.title("Box Plot of Age by Passenger Class")
+plt.show()
+
+
+
+plt.figure(figsize=(6, 4))
+sns.violinplot(x='class', y='age', data=df)
+plt.title("Violin Plot of Age by Passenger Class")
+plt.show()
+
+
+plt.figure(figsize=(6, 4))
+sns.histplot(x='fare', bins=10, data=df, hue='survived', kde=False)
+plt.title("Distribution of Fare")
+plt.xlabel("Fare")
+plt.ylabel("Count")
+plt.show()
+
+
+plt.figure(figsize=(6, 4))
+sns.scatterplot(x='age', y='fare', data=df)
+plt.title("Age vs Fare")
+plt.show()
+
+
+plt.figure(figsize=(6, 4))
+sns.scatterplot(x='age', y='fare', hue='survived', data=df)
+plt.title("Age vs Fare by Survival")
+plt.show()
+
+
