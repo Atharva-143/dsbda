@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+
+
+data = {
+    'Name': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+    'Age': [18, 19, 20, 21, np.nan, 22, 23, 120, 21, 20],
+    'Marks': [78, 85, 90, np.nan, 76, 95, 500, 88, 91, 79],
+    'Attendance': [80, 75, 90, 85, 95, np.nan, 70, 65, 88, 92],
+    'Grade': ['A', 'B', 'A', 'C', 'B', 'A', 'Z', 'B', 'A', 'C']
+}
+
+
+df = pd.DataFrame(data)
+print("Initial Dataset")
+print(df)
+
+
+print("\nMissing Values")
+print(df.isnull().sum())
+
+
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Marks'] = df['Marks'].fillna(df['Marks'].mean())
+df['Attendance'] = df['Attendance'].fillna(df['Attendance'].mean())
+df['Grade'] = df['Grade'].replace('Z', 'B')
+print("\nDataset After Handling Missing Values and Inconsistencies")
+print(df)
+
+
+Q1 = df['Marks'].quantile(0.25)
+Q3 = df['Marks'].quantile(0.75)
+IQR = Q3 - Q1
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+df['Marks'] = np.where(df['Marks'] > upper, upper, df['Marks'])
+df['Marks'] = np.where(df['Marks'] < lower, lower, df['Marks'])
+print("\nDataset After Outlier Treatment")
+print(df)
+
+
+scaler = MinMaxScaler()
+df['Scaled_Attendance'] = scaler.fit_transform(df[['Attendance']])
+print("\nDataset After Transformation")
+print(df)
+print("\nFinal Dataset Information")
+print(df.info())
+
