@@ -1,0 +1,67 @@
+import pandas as pd
+
+
+data = {
+    'Age': [25, 30, 25, 40, 55, 60, 33, 28, 45, 50],
+    'Income': [50000, 60000, 52000, 70000, 80000, 90000, 65000, 62000, 75000, 85000],
+    'Age_Group': ['20-30', '30-40', '20-30', '40-50', '50-60',
+                  '50-60', '30-40', '20-30', '40-50', '50-60']
+}
+
+
+df = pd.DataFrame(data)
+print("Dataset")
+print(df)
+
+
+print("\nSummary Statistics of Income Grouped by Age Group")
+print(df.groupby('Age_Group')['Income'].describe())
+
+
+print("\nMean Income")
+print(df.groupby('Age_Group')['Income'].mean())
+
+
+print("\nMedian Income")
+print(df.groupby('Age_Group')['Income'].median())
+
+
+print("\nMinimum Income")
+print(df.groupby('Age_Group')['Income'].min())
+
+
+print("\nMaximum Income")
+print(df.groupby('Age_Group')['Income'].max())
+
+
+print("\nStandard Deviation")
+print(df.groupby('Age_Group')['Income'].std())
+
+
+iris = pd.read_csv("Iris.csv")
+
+
+print("\nFirst 5 Rows of Iris Dataset")
+print(iris.head())
+
+
+print("\nStatistical Details of Iris Dataset Grouped by Species")
+print(iris.groupby('variety').describe())
+
+
+print("\nMean Values")
+print(iris.groupby('variety').mean())
+
+
+print("\nMedian Values")
+print(iris.groupby('variety').median())
+
+
+print("\nStandard Deviation")
+print(iris.groupby('variety').std())
+
+
+print("\nPercentiles")
+print(iris.groupby('variety').quantile([0.25, 0.50, 0.75]))
+
+
