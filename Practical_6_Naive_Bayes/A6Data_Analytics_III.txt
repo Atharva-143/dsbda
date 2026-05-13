@@ -1,0 +1,84 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+
+
+df = pd.read_csv("Iris.csv")
+
+
+print("First 5 Rows of Dataset:")
+print(df.head())
+
+
+X = df.drop('variety', axis=1)
+y = df['variety']
+
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+
+model = GaussianNB()
+model.fit(X_train_scaled, y_train)
+
+
+y_pred = model.predict(X_test_scaled)
+
+
+
+cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+cm_df = pd.DataFrame(cm, index=model.classes_, columns=model.classes_)
+
+
+print("\nConfusion Matrix:")
+print(cm_df)
+
+
+plt.figure(figsize=(6, 5))
+sns.heatmap(cm_df, annot=True, cmap='Blues', fmt='d')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+
+print("\nClass-wise TP, FP, TN, FN:")
+for i, label in enumerate(model.classes_):
+    TP = cm[i, i]
+    FP = cm[:, i].sum() - TP
+    FN = cm[i, :].sum() - TP
+    TN = cm.sum() - (TP + FP + FN)
+
+    print(f"\nClass: {label}")
+    print(f"True Positives (TP): {TP}")
+    print(f"False Positives (FP): {FP}")
+    print(f"True Negatives (TN): {TN}")
+    print(f"False Negatives (FN): {FN}")
+
+
+accuracy = accuracy_score(y_test, y_pred)
+error_rate = 1 - accuracy
+precision = precision_score(y_test, y_pred, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+
+print("\nOverall Model Evaluation:")
+print(f"Accuracy: {accuracy:.2f}")
+print(f"Error Rate: {error_rate:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+
+
