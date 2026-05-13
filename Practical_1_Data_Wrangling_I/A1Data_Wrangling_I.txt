@@ -1,0 +1,78 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+
+print("Dataset Name : Iris Dataset")
+print("Source : Kaggle / UCI Machine Learning Repository")
+print("URL : https://www.kaggle.com/datasets/uciml/iris")
+
+print("\nDescription :")
+print("The Iris dataset contains measurements of iris flowers such as sepal length, sepal width, petal length, petal width and species classification.")
+
+df = pd.read_csv("Iris.csv")
+print("\nDataset Loaded Successfully")
+
+print("\nFirst 5 Rows of Dataset")
+print(df.head())
+
+print("\nLast 5 Rows of Dataset")
+print(df.tail())
+
+print("\nShape of Dataset")
+print(df.shape)
+
+print("\nColumn Names")
+print(df.columns)
+
+print("\nMissing Values in Each Column")
+print(df.isnull().sum())
+
+print("\nNumber of Duplicate Rows")
+print(df.duplicated().sum())
+
+df = df.drop_duplicates()
+print("\nDuplicate Rows Removed Successfully")
+
+print("\nStatistical Summary")
+print(df.describe())
+
+print("\nDataset Information")
+print(df.info())
+
+print("\nVariable Description")
+print("sepal.length  -> Sepal Length (Numeric)")
+print("sepal.width   -> Sepal Width (Numeric)")
+print("petal.length  -> Petal Length (Numeric)")
+print("petal.width   -> Petal Width (Numeric)")
+print("variety       -> Type of Iris Flower (Categorical)")
+
+print("\nData Types of Variables")
+print(df.dtypes)
+
+
+scaler = MinMaxScaler()
+df[['sepal.length',
+    'sepal.width',
+    'petal.length',
+    'petal.width']] = scaler.fit_transform(
+    df[['sepal.length',
+        'sepal.width',
+        'petal.length',
+        'petal.width']]
+)
+
+print("\nDataset After Normalization")
+print(df.head())
+
+df['variety'] = df['variety'].map({
+    'Setosa': 0,
+    'Versicolor': 1,
+    'Virginica': 2
+})
+
+print("\nDataset After Converting Categorical Variable into Numeric")
+print(df.head())
+
+print("\nFinal Dataset Information")
+print(df.info())
+
