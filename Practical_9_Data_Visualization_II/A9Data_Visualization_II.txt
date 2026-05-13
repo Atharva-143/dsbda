@@ -1,0 +1,62 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+from collections import Counter
+
+
+df = sns.load_dataset('titanic')
+
+
+print("First 5 Rows of Titanic Dataset:")
+print(df.head())
+
+
+print("\nStatistical Summary:")
+print(df.describe())
+
+
+print("\nStatistical Summary (Transposed):")
+print(df.describe().transpose())
+
+
+age_data = df['age'].dropna()
+sorted_age_data = sorted(age_data)
+n = len(sorted_age_data)
+
+
+mean_age = sum(age_data) / len(age_data)
+
+
+if n % 2 == 1:
+    median_age = sorted_age_data[n // 2]
+else:
+    median_age = (sorted_age_data[n // 2 - 1] + sorted_age_data[n // 2]) / 2
+
+
+age_counts = Counter(age_data)
+mode_age = age_counts.most_common(1)[0][0]
+
+
+print(f"\nMean Age: {mean_age}")
+print(f"Median Age: {median_age}")
+print(f"Mode Age: {mode_age}")
+
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(x='sex', y='age', hue='survived', data=df, palette='viridis')
+plt.title("Distribution of Age with respect to Gender and Survival Status")
+plt.xlabel("Sex")
+plt.ylabel("Age")
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.violinplot(x='sex', y='age', hue='survived', data=df, palette='pastel')
+plt.title("Violin Plot of Age by Gender and Survival Status")
+plt.show()
+
+
+sns.catplot(x='sex', hue='survived', data=df, kind='count')
+plt.title("Count of Survival based on Gender")
+plt.show()
+
+
