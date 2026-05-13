@@ -1,0 +1,158 @@
+STEP 1 — Create Project Folder
+
+mkdir logprocessor
+
+cd logprocessor
+
+
+STEP 2 — Create Java File
+
+gedit LogProcessor.java
+
+
+Paste the following code:
+
+import java.io.IOException;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class LogProcessor {
+
+public static class LogMapper
+        extends Mapper<Object, Text, Text, IntWritable> {
+
+    private final static IntWritable one = new IntWritable(1);
+    private Text logType = new Text();
+
+    public void map(Object key, Text value, Context context)
+            throws IOException, InterruptedException {
+
+        String line = value.toString();
+
+        String[] words = line.split(" ");
+
+        if (words.length > 0) {
+            logType.set(words[0]);
+            context.write(logType, one);
+        }
+    }
+}
+
+public static class LogReducer
+        extends Reducer<Text, IntWritable, Text, IntWritable> {
+
+    private IntWritable result = new IntWritable();
+
+    public void reduce(Text key, Iterable<IntWritable> values,
+                       Context context)
+            throws IOException, InterruptedException {
+
+        int sum = 0;
+
+        for (IntWritable val : values) {
+            sum += val.get();
+        }
+
+        result.set(sum);
+
+        context.write(key, result);
+    }
+}
+
+public static void main(String[] args) throws Exception {
+
+    Configuration conf = new Configuration();
+
+    Job job = Job.getInstance(conf, "log processor");
+
+    job.setJarByClass(LogProcessor.class);
+
+    job.setMapperClass(LogMapper.class);
+    job.setCombinerClass(LogReducer.class);
+    job.setReducerClass(LogReducer.class);
+
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(IntWritable.class);
+
+    FileInputFormat.addInputPath(job, new Path(args[0]));
+    FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+    System.exit(job.waitForCompletion(true) ? 0 : 1);
+}
+
+}
+
+
+STEP 3 — Create Input Folder
+
+mkdir input
+
+
+STEP 4 — Create Log File
+
+gedit input/log.txt
+
+Paste:
+
+ERROR Disk failure
+INFO User login
+ERROR Network issue
+WARNING Memory low
+INFO File uploaded
+ERROR System crash
+
+
+STEP 5 — Compile Java Program
+
+javac -classpath $(hadoop classpath) -d log_classes LogProcessor.java
+
+
+STEP 6 — Create JAR File
+
+jar -cvf logprocessor.jar -C log_classes/ .
+
+
+STEP 7 — Run Hadoop Program
+
+hadoop jar logprocessor.jar LogProcessor input output
+
+
+STEP 8 — Display Final Output
+
+cat output/part-r-00000
+
+
+Expected Output:
+
+ERROR 3
+INFO 2
+WARNING 1
+
+IF ERROR COMES
+
+Error:
+output already exists
+
+Solution:
+
+rm -r output
+
+Then run Hadoop command again.
+
+Remember ONLY this:
+
+create folder
+→ create java file
+→ create input file
+→ compile
+→ create jar
+→ run hadoop
+→ display output
